@@ -15,8 +15,7 @@
 
 #PS1='`_git_headname``_git_upstream_state`!`_git_repo_state``_git_workdir``_git_dirty``_git_dirty_stash`> '
 
-export PS1='shgit> '
-
+# define aliases
 _git_cmd_cfg=(
   'add            alias'
   'blame          alias'
@@ -55,7 +54,7 @@ _git_cmd_cfg=(
   'status         alias'
   'tag            alias'
 )
-
+# load all aliases
 for cfg in "${_git_cmd_cfg[@]}" ; do
   read cmd opts <<< $cfg
   for opt in $opts ; do
@@ -66,3 +65,10 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
     esac
   done
 done
+
+function shgit_prompt_cmd {
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  PS1="${branch}> "
+}
+
+PROMPT_COMMAND=shgit_prompt_cmd
