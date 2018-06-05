@@ -2,18 +2,27 @@
 
 # either we are sourced or spawn new shell
 [ "$0" = 'bash' ] ||
-  exec /usr/bin/env bash --rcfile "$0" "$@"
+  {
+    echo "Not sourced, exec new shell." >&2
+    exec /usr/bin/env bash --rcfile "$0" "$@";
+  }
 
 # read user bashrc
 [[ -r ~/.bashrc ]] && {
+  echo "Loading your ~/.bashrc" >&2
   pushd ~ > /dev/null
   . .bashrc
   popd > /dev/null
 }
 
-[[ -z "${PROMPT_COMMAND}" ]] || unset PROMPT_COMMAND
+[[ -z "${PROMPT_COMMAND}" ]] || {
+  echo "Clearing out your PROMPT_COMMAND for this shell." >&2
+  unset PROMPT_COMMAND ;
+}
 
 #PS1='`_git_headname``_git_upstream_state`!`_git_repo_state``_git_workdir``_git_dirty``_git_dirty_stash`> '
+
+echo "Setting up git aliases... " >&2
 
 # define aliases
 _git_cmd_cfg=(
@@ -31,6 +40,7 @@ _git_cmd_cfg=(
   'fetch          alias'
   'fsck           alias'
   'gc             alias'
+  'grep           alias'
   'init           alias'
   'log            alias'
   'ls-remote      alias'
@@ -65,10 +75,26 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
     esac
   done
 done
+echo "Setting up stock aliases done" >&2
 
+echo "Loading your pre-defined git aliases" >&2
+eval "$(
+    git config --get-regexp 'alias\..*' |
+    sed 's/^alias\.//'                  |
+    while read key command
+    do
+      if expr -- "$command" : '!' >/dev/null
+      then echo "alias $key='git $key'"
+      else echo "gitalias $key=\"git $command\""
+      fi
+    done
+  )"
+
+echo "Done, setting up prompt hook." >&2
 function shgit_prompt_cmd {
   branch=$(git rev-parse --abbrev-ref HEAD)
   PS1="${branch}> "
 }
-
 PROMPT_COMMAND=shgit_prompt_cmd
+
+echo "Shell setup done, ready." >&2
