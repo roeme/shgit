@@ -91,9 +91,20 @@ eval "$(
   )"
 
 echo "Done, setting up prompt hook." >&2
+function prompt_pwd {
+  local pwdmaxlen=20
+  local trunc_symbol="…"
+  if [ ${#PWD} -gt $pwdmaxlen ]; then
+    local pwdoffset=$(( ${#PWD} - $pwdmaxlen ))
+    newPWD="${trunc_symbol}${PWD:$pwdoffset:$pwdmaxlen}"
+  else
+    newPWD=${PWD}
+  fi
+}
 function shgit_prompt_cmd {
   branch=$(git rev-parse --abbrev-ref HEAD)
-  PS1="${branch}> "
+  prompt_pwd
+  PS1="${branch} ${newPWD}> "
 }
 PROMPT_COMMAND=shgit_prompt_cmd
 
