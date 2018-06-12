@@ -91,20 +91,26 @@ eval "$(
   )"
 
 echo "Done, setting up prompt hook." >&2
+
+# get worktree dir
+current_worktree=$(git rev-parse --show-toplevel)
+repo_name=$(basename "${current_worktree}")
+
 function prompt_pwd {
   local pwdmaxlen=20
   local trunc_symbol="…"
-  if [ ${#PWD} -gt $pwdmaxlen ]; then
-    local pwdoffset=$(( ${#PWD} - $pwdmaxlen ))
+  oldPWD="${PWD:${#current_worktree}}"
+  if [ ${#oldPWD} -gt $pwdmaxlen ]; then
+    local pwdoffset=$(( ${#oldPWD} - $pwdmaxlen ))
     newPWD="${trunc_symbol}${PWD:$pwdoffset:$pwdmaxlen}"
   else
-    newPWD=${PWD}
+    newPWD=${oldPWD}
   fi
 }
 function shgit_prompt_cmd {
   branch=$(git rev-parse --abbrev-ref HEAD)
   prompt_pwd
-  PS1="${branch} ${newPWD}> "
+  PS1="${repo_name} ${branch} ${newPWD}> "
 }
 PROMPT_COMMAND=shgit_prompt_cmd
 
