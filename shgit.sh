@@ -102,7 +102,7 @@ function prompt_pwd {
   oldPWD="${PWD:${#current_worktree}}"
   if [ ${#oldPWD} -gt $pwdmaxlen ]; then
     local pwdoffset=$(( ${#oldPWD} - $pwdmaxlen ))
-    newPWD="${trunc_symbol}${PWD:$pwdoffset:$pwdmaxlen}"
+    newPWD="${trunc_symbol}${oldPWD:$pwdoffset:$pwdmaxlen}"
   else
     newPWD=${oldPWD}
   fi
