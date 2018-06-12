@@ -4,7 +4,7 @@
 [ "$0" = 'bash' ] ||
   {
     echo "Not sourced, exec new shell." >&2
-    exec /usr/bin/env bash --rcfile "$0" "$@";
+    exec /usr/bin/env bash --rcfile "$0" "$@"
   }
 
 # read user bashrc
