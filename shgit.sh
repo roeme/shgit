@@ -1,10 +1,9 @@
 #!/bin/bash
-
 # either we are sourced or spawn new shell
-[ "$0" = '-bash' ] || [ "$0" = 'bash' ] ||
+[ "$0" = '-bash' ] || [ "$0" = */bash ] || [ "$0" = 'bash' ] ||
   {
     echo "Not sourced, exec new shell." >&2
-    exec /usr/bin/env bash --rcfile "$0" "$@" ;
+    /usr/bin/env bash --rcfile "$0" "$@" && exit
   }
 
 # read user bashrc
