@@ -3,8 +3,11 @@
 [ "$0" = '-bash' ] || [ "$0" = */bash ] || [ "$0" = 'bash' ] ||
   {
     echo "Not sourced, exec new shell." >&2
-    /usr/bin/env bash --rcfile "$0" "$@" && exit
+    #/usr/bin/env bash --rcfile "$0" "$@" && exit
+    /usr/bin/env bash --rcfile <(echo "source $0") "$@" && exit
   }
+
+echo "shgit starting up."
 
 # read user bashrc
 [[ -r ~/.bashrc ]] && {
@@ -13,14 +16,14 @@
   . .bashrc
   popd > /dev/null
 }
-
 [[ -z "${PROMPT_COMMAND}" ]] || {
   echo "Clearing out your PROMPT_COMMAND for this shell." >&2
   unset PROMPT_COMMAND ;
 }
-
+echo "Disabling job control and enabling lastpipe option"
+set +m
+shopt -s lastpipe
 #PS1='`_git_headname``_git_upstream_state`!`_git_repo_state``_git_workdir``_git_dirty``_git_dirty_stash`> '
-
 echo "Setting up git aliases... " >&2
 
 # define aliases
@@ -62,6 +65,7 @@ _git_cmd_cfg=(
   'stash          alias'
   'status         alias'
   'tag            alias'
+  'lfs            alias'
 )
 # load all aliases
 for cfg in "${_git_cmd_cfg[@]}" ; do
@@ -95,11 +99,19 @@ echo "Done, setting up prompt hook." >&2
 current_worktree=$(git rev-parse --show-toplevel)
 repo_name=$(basename "${current_worktree}")
 
+# set info for prompt
+function prompt_info {
+  git rev-parse --show-toplevel --abbrev-ref HEAD | read -d '\n' current_worktree branch #|| { current_worktree='' ; repo_name='💤' ; }
+}
+
 function prompt_pwd {
   local pwdmaxlen=20
   local trunc_symbol="…"
+  prompt_info
   oldPWD="${PWD:${#current_worktree}}"
-  if [ ${#oldPWD} -gt $pwdmaxlen ]; then
+  if [ ${#oldPWD} -eq 0 ]; then
+   newPWD=/
+  elif [ ${#oldPWD} -gt $pwdmaxlen ]; then
     local pwdoffset=$(( ${#oldPWD} - $pwdmaxlen ))
     newPWD="${trunc_symbol}${oldPWD:$pwdoffset:$pwdmaxlen}"
   else
@@ -107,10 +119,15 @@ function prompt_pwd {
   fi
 }
 function shgit_prompt_cmd {
-  branch=$(git rev-parse --abbrev-ref HEAD)
+  #git rev-parse --show-toplevel --abbrev-ref HEAD | read -d '\n' current_worktree branch && {
+  #  prompt_pwd
+  #} || {
+  #  #not in a git dir
+  #  repo_name='💤'
+  #}
   prompt_pwd
   PS1="${repo_name} ${branch} ${newPWD}> "
 }
 PROMPT_COMMAND=shgit_prompt_cmd
 
-echo "Shell setup done, ready." >&2
+echo "Shell setup done, ready. 🍻" >&2
