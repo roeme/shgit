@@ -97,12 +97,14 @@ eval "$(
     done
   )"
 
-echo "Done, setting up prompt hook." >&2
+#not yet.
+#echo "Reading color escapes from git..."
+ANSI_RESET="\001$(git config --get-color "" "reset")\002"
 
+echo "Setting up prompt hook..." >&2
 # initial load
 current_worktree=$(git rev-parse --show-toplevel)
 repo_name=$(basename "${current_worktree}")
-#branch=$(git rev-parse --abbrev-ref HEAD)
 
 # set info for prompt
 function prompt_info {
@@ -126,7 +128,7 @@ function prompt_pwd {
 function shgit_prompt_cmd {
   prompt_info
   prompt_pwd
-  PS1="${repo_name} ${branch} ${newPWD}> "
+  PS1="${repo_name} ${branch} ${newPWD}> ${ANSI_RESET}"
 }
 PROMPT_COMMAND=shgit_prompt_cmd
 
