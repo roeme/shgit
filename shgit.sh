@@ -3,8 +3,9 @@
 [ "$0" = '-bash' ] || [ "$0" = */bash ] || [ "$0" = 'bash' ] ||
   {
     echo "Not sourced, exec new shell." >&2
-    #/usr/bin/env bash --rcfile "$0" "$@" && exit
-    /usr/bin/env bash --rcfile <(echo "source $0") "$@" && exit
+    #/usr/bin/env bash -o --rcfile "$0" "$@" && exit
+    /usr/bin/env bash --rcfile <(echo "source $0") "$@"
+    exit
   }
 
 echo "shgit starting up."
@@ -21,7 +22,10 @@ echo "shgit starting up."
   unset PROMPT_COMMAND ;
 }
 echo "Disabling job control and enabling lastpipe option"
+#unfortunately this doesn't (yet?) take effect when issued before
+#first prompt has been displayed.
 set +m
+set +o monitor
 shopt -s lastpipe
 #PS1='`_git_headname``_git_upstream_state`!`_git_repo_state``_git_workdir``_git_dirty``_git_dirty_stash`> '
 echo "Setting up git aliases... " >&2
@@ -95,19 +99,20 @@ eval "$(
 
 echo "Done, setting up prompt hook." >&2
 
-# get worktree dir
+# initial load
 current_worktree=$(git rev-parse --show-toplevel)
 repo_name=$(basename "${current_worktree}")
+#branch=$(git rev-parse --abbrev-ref HEAD)
 
 # set info for prompt
 function prompt_info {
+  set +o monitor # currently needed here :/
   git rev-parse --show-toplevel --abbrev-ref HEAD | read -d '\n' current_worktree branch #|| { current_worktree='' ; repo_name='💤' ; }
 }
 
 function prompt_pwd {
   local pwdmaxlen=20
   local trunc_symbol="…"
-  prompt_info
   oldPWD="${PWD:${#current_worktree}}"
   if [ ${#oldPWD} -eq 0 ]; then
    newPWD=/
@@ -119,12 +124,7 @@ function prompt_pwd {
   fi
 }
 function shgit_prompt_cmd {
-  #git rev-parse --show-toplevel --abbrev-ref HEAD | read -d '\n' current_worktree branch && {
-  #  prompt_pwd
-  #} || {
-  #  #not in a git dir
-  #  repo_name='💤'
-  #}
+  prompt_info
   prompt_pwd
   PS1="${repo_name} ${branch} ${newPWD}> "
 }
