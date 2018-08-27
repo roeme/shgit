@@ -1,4 +1,11 @@
 #!/bin/bash
+# install?
+[[ "$1" = '--install' ]] && [[ $# -eq 1 ]] && {
+  git config --global alias.sh '!shgit'
+  echo "alias 'sh' to your global git config. Make sure shgit is in your \$PATH"
+  exit 0
+}
+
 # either we are sourced or spawn new shell
 [ "$0" = '-bash' ] || [ "$0" = */bash ] || [ "$0" = 'bash' ] ||
   {
@@ -97,9 +104,20 @@ eval "$(
     done
   )"
 
-#not yet.
-#echo "Reading color escapes from git..."
+echo "Setting up color palette..."
+_get_colors_default=(
+  'reponame        208 234'
+  'currentbranch   034'
+  'pwd             250'
+  'prompt          254 0'
+  )
 ANSI_RESET="\001$(git config --get-color "" "reset")\002"
+declare -A shg_colors
+echo "Reading color escapes from git..."
+for defaultcol_entry in "${_get_colors_default[@]}"; do
+  read colsetting default_color <<< $defaultcol_entry
+  shg_colors[${colsetting}]="\001$(git config --get-color color.shgit.${colsetting} "${default_color}")\002"
+done
 
 echo "Setting up prompt hook..." >&2
 # initial load
@@ -128,7 +146,7 @@ function prompt_pwd {
 function shgit_prompt_cmd {
   prompt_info
   prompt_pwd
-  PS1="${repo_name} ${branch} ${newPWD}> ${ANSI_RESET}"
+  PS1="${shg_colors[reponame]}${repo_name} ${shg_colors[currentbranch]}${branch} ${shg_colors[pwd]}${newPWD} ${shg_colors[prompt]}\$${ANSI_RESET} "
 }
 PROMPT_COMMAND=shgit_prompt_cmd
 
