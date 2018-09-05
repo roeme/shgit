@@ -35,6 +35,10 @@ set +m
 set +o monitor
 shopt -s lastpipe
 #PS1='`_git_headname``_git_upstream_state`!`_git_repo_state``_git_workdir``_git_dirty``_git_dirty_stash`> '
+
+echo "Clearing out existing completions..." >&2
+complete -r
+
 echo "Setting up git aliases... " >&2
 
 # define aliases
