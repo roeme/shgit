@@ -62,7 +62,7 @@ _git_cmd_cfg=(
   'log            alias'
   'ls-remote      alias'
   'ls-tree        alias'
-  'merge          alias'
+  'merge          alias stdcmpl'
   'merge-base     alias'
   'mergetool      alias'
   'mv             alias'
@@ -88,13 +88,26 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
   for opt in $opts ; do
     case $opt in
       alias)   alias $cmd="git $cmd" ;;
-      #stdcmpl) complete -o default -o nospace -F _git_${cmd//-/_} $cmd ;;
+      stdcmpl) complete -o default -o nospace -F _gitcmpl_${cmd//-/_} $cmd ;;
       #logcmpl) complete -o default -o nospace -F _git_log         $cmd ;;
     esac
   done
 done
 echo "Setting up stock aliases done" >&2
+echo "Declaring completion functions..." >&2
 
+_gitcmpl_merge() {
+  local cur prev opts
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  opts="--abort --continue --ff -e"
+  if [[ ${cur} == -* ]] ; then
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  fi
+}
+
+echo "Done setting up completions." >&2
 echo "Loading your pre-defined git aliases" >&2
 eval "$(
     git config --get-regexp 'alias\..*' |
