@@ -91,7 +91,7 @@ done
 echo "Setting up stock aliases done" >&2
 echo "Setting up shell aliases..." >&2
 _sh_cmd_aliases=(
-  'pushall    "remote|xargs -L1 git push"'
+  'pushall    remote|xargs -L1 git push'
   )
 for cmd_alias_entry in "${_sh_cmd_aliases[@]}"; do
   read cmd cmd_alias <<< $cmd_alias_entry
