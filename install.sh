@@ -1,6 +1,15 @@
 #!/bin/bash
 set -eu
-myloc="$(readlink -f "$(dirname "$0")")"
+unameOut="$(uname -s)"
+case "${unameOut}" in
+  Darwin*)    readlink=greadlink;;
+  *BSD*)      readlink=greadlink;;
+  *)          readlink=readlink;;
+esac
+myloc="$($readlink -f "$(dirname "$0")")" || {
+  echo 'need GNU coreutils!'
+  exit 1
+}
 usage() {
   echo "Usage: install.sh install|uninstall"
 }
@@ -10,7 +19,7 @@ case ${1:-} in
     echo "added alias 'sh' to your global git config."
     [[ -d "${HOME}/.libexec" ]] || {
       mkdir "${HOME}/.libexec"
-      echo 'created "${HOME}/.libexec'
+      echo "created ${HOME}/.libexec"
     }
     ln -s "$myloc/completions" "${HOME}/.libexec/shgit_completions"
     echo "You can invoke the shell via 'git sh' from within a repo."
