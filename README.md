@@ -15,3 +15,6 @@ Installation:
 -------------
 1. git clone git@github.com:roeme/shgit.git
 2. cd shgit && ./install.sh install
+
+
+Heavily inspired by Ryan Tomayko's git-sh.
