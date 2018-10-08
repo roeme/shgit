@@ -10,6 +10,7 @@ Unintrusive, lightweight git shell. Design/implementation considerations:
 - By default, invoke as little git operations as possible
   (for stupid enterprise environments/slow homes/low resources)
 - Works with bash
+- Doesn't clobber your personal aliases/setups (or tries to)
 
 Installation:
 -------------
