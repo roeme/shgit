@@ -94,7 +94,7 @@ _sh_cmd_aliases=(
   'pushall    "remote|xargs -L1 git push"'
   )
 for cmd_alias_entry in "${_sh_cmd_aliases[@]}"; do
-  read cmd cmd_alias << $cmd_alias_entry
+  read cmd cmd_alias <<< $cmd_alias_entry
   alias $cmd="$cmd_alias"
 done
 echo "Done setting up shell aliases." >&2
