@@ -13,6 +13,7 @@ case ${1:-} in
       echo 'created "${HOME}/.libexec'
     }
     ln -s "$myloc/completions" "${HOME}/.libexec/shgit_completions"
+    echo "You can invoke the shell via 'git sh' from within a repo."
     ;;
   uninstall)
     rm -r "${HOME}/.libexec/shgit_completions"
