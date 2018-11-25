@@ -18,4 +18,13 @@ Installation:
 2. cd shgit && ./install.sh install
 
 
+Configuration:
+--------------
+
+## Colors
+Colors can be configured through git, by using the standard `[color]` section.
+shgit uses the `shgit` prefix for configurable items. Have a look into the code
+for a current list of things that can be colorized.
+
+
 Heavily inspired by Ryan Tomayko's git-sh.
