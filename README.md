@@ -68,7 +68,7 @@ fitting standard section. The following options are available in `[shgit]`:
     git commands whatsoever when prompting the user, rendering the shell even
     faster. When using `custom`, that is up to you, naturally.
 
-* `ps1-prefix` (String, Default "✣"):
+* `ps1-prefix` (String, Default "🐚 "):
 
     Custom prefix that gets prepended to "$PS1" when `prompt-command-mode` is
     set to `stealthy`.
