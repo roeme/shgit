@@ -21,7 +21,7 @@ function _shgit_msg() {
 }
 
 # either we are sourced or spawn new shell
-[ "$0" = '-bash' ] || [ "$0" = */bash ] || [ "$0" = 'bash' ] ||
+[ "$0" = '-bash' ] || [[ "$0" = */bash ]] || [ "$0" = 'bash' ] ||
   {
     _shgit_init_msg "Not sourced, exec new shell."
     /usr/bin/env bash --rcfile <(echo "source $0") "$@"
@@ -54,7 +54,7 @@ shopt -s lastpipe
 
 _shgit_init_msg "Reading shgit specific settings..."
 _shgit_trunc_symbol="$(git config --default "…" shgit.trunc-symbol)"
-_shgit_pwd_max_len="$(git config shgit.pwd-max-len)"
+_shgit_pwd_max_len="$(git config --default 20 shgit.pwd-max-len)"
 _sghit_prompt_mode="$(git config --default "override" shgit.prompt-command-mode)"
 
 
@@ -174,7 +174,7 @@ function prompt_info {
 }
 
 function prompt_pwd {
-  local pwdmaxlen="${_shgit_pwd_max_len:20}"
+  local pwdmaxlen="${_shgit_pwd_max_len}"
   local trunc_symbol="${_shgit_trunc_symbol}"
   oldPWD="${PWD:${#current_worktree}}"
   if [ ${#oldPWD} -eq 0 ]; then
@@ -224,5 +224,16 @@ case $_sghit_prompt_mode in
     exit 1
   ;;
 esac
+
+if [[ "$(git config --default false "shgit.hook-cd")" = "true" ]]; then
+  _shgit_init_msg "Hooking cd..."
+  function cd {
+    if [[ "${#:0}" -gt 0 ]]; then
+      builtin cd "$@" || return
+    else
+      builtin cd "$current_worktree" || return
+    fi
+  }
+fi
 
 _shgit_init_msg "Shell setup done, ready. 🍻"

@@ -66,7 +66,7 @@ fitting standard section. The following options are available in `[shgit]`:
 
     The settings `stealthy` and `no-touchy` will stop shgit from executing _any_
     git commands whatsoever when prompting the user, rendering the shell even
-    faster.
+    faster. When using `custom`, that is up to you, naturally.
 
 * `ps1-prefix` (String, Default "✣"):
 
@@ -77,6 +77,11 @@ fitting standard section. The following options are available in `[shgit]`:
 
     Custom `$PROMPT_COMMAND`. Only read if `prompt-command-mode` has been set to
     `custom`, ignored otherwise.
+
+* `hook-cd` (Boolean, Default false)
+
+    Tells shgit to hook cd, so instead of cwd to $HOME by default, this will
+    move to the current repo's root.
 
 
 ## Colors
