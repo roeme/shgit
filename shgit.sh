@@ -7,8 +7,17 @@ function _shgit_init_msg() {
   [[ "${_shgit_quiet_init:-,,}" = true ]] || _shgit_msg "$1"
 }
 
+function _shgit_warn_msg() {
+  _shgit_msg "\e[33mWarning:\e[39m $1"
+}
+
+function _shgit_die() {
+  _shgit_msg "\e[31mFail:\e[39m $1"
+  exit 1
+}
+
 function _shgit_msg() {
-  echo "$1" >&2
+  echo -e "$1" >&2
 }
 
 # either we are sourced or spawn new shell
@@ -35,10 +44,7 @@ function in_array() {
   . .bashrc
   popd > /dev/null
 }
-[[ -z "${PROMPT_COMMAND}" ]] || {
-  _shgit_init_msg "Clearing out your PROMPT_COMMAND for this shell."
-  unset PROMPT_COMMAND ;
-}
+
 _shgit_init_msg "Disabling job control and enabling lastpipe option"
 #unfortunately this doesn't (yet?) take effect when issued before
 #first prompt has been displayed. Need to investigate further.
@@ -49,6 +55,8 @@ shopt -s lastpipe
 _shgit_init_msg "Reading shgit specific settings..."
 _shgit_trunc_symbol="$(git config --default "…" shgit.trunc-symbol)"
 _shgit_pwd_max_len="$(git config shgit.pwd-max-len)"
+_sghit_prompt_mode="$(git config --default "override" shgit.prompt-command-mode)"
+
 
 _shgit_init_msg "Clearing out existing completions..."
 complete -r
@@ -128,7 +136,7 @@ eval "$(
     do
       if in_array shell_keywords $key; then
         [[ "${_shgit_suppress_keyword_alert:-,,}" = true ]] ||
-          _shgit_msg "Warning: Your git alias '$key' is a shell keyword. This usually results in much funkiness, and hence is available as 'git $key'."
+          _shgit_warn_msg "Your git alias '$key' is a shell keyword. This usually results in much funkiness, and hence is available as 'git $key'."
         # By simply skipping here, we offload the alias interpretation to git.
         continue
       fi
@@ -183,6 +191,38 @@ function shgit_prompt_cmd {
   prompt_pwd
   PS1="${shg_colors[reponame]}${repo_name} ${shg_colors[currentbranch]}${branch} ${shg_colors[pwd]}${newPWD} ${shg_colors[prompt]}\$${ANSI_RESET} "
 }
-PROMPT_COMMAND=shgit_prompt_cmd
+
+case $_sghit_prompt_mode in
+  override)
+    [[ -z "${PROMPT_COMMAND}" ]] || {
+      _shgit_init_msg "Clearing out your PROMPT_COMMAND for this shell."
+      unset PROMPT_COMMAND ;
+    }
+    PROMPT_COMMAND=shgit_prompt_cmd
+  ;;
+  stealthy)
+    _sghit_ps1_prefix="$(git config --default "✣" shgit.ps1-prefix)"
+    if [[ -n "${PROMPT_COMMAND}" ]]; then
+      _shgit_init_msg "Adjusting your PROMPT_COMMAND for this shell."
+      PROMPT_COMMAND="${PROMPT_COMMAND}; PS1=\"${_sghit_ps1_prefix}\${PS1}\""
+    else
+      PS1="${_sghit_ps1_prefix}${PS1}"
+    fi
+  ;;
+  no-touchy)
+    # noop
+  ;;
+  custom)
+    _sghit_custom_prompt_command="$(git config shgit.custom-prompt-command)"
+    [[ -n "${_sghit_custom_prompt_command:-}" ]] || {
+      _shgit_die "Custom prompt command requested but none set"
+      exit 1
+    }
+  ;;
+  *)
+    _shgit_die "Unknown prompt mode: $_sghit_prompt_mode"
+    exit 1
+  ;;
+esac
 
 _shgit_init_msg "Shell setup done, ready. 🍻"
