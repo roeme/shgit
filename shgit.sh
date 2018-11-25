@@ -22,18 +22,17 @@ echo "shgit starting up."
 }
 echo "Disabling job control and enabling lastpipe option"
 #unfortunately this doesn't (yet?) take effect when issued before
-#first prompt has been displayed.
+#first prompt has been displayed. Need to investigate further.
 set +m
 set +o monitor
 shopt -s lastpipe
-#PS1='`_git_headname``_git_upstream_state`!`_git_repo_state``_git_workdir``_git_dirty``_git_dirty_stash`> '
 
 echo "Clearing out existing completions..." >&2
 complete -r
 
 echo "Setting up git aliases... " >&2
 
-# define aliases
+# define aliases. TODO: factor this outta here/make it configurable
 _git_cmd_cfg=(
   'add            alias'
   'blame          alias'
@@ -84,7 +83,6 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
         complete -o default -o nospace -F _gitcmpl_${cmd//-/_} $cmd
         source ~/.libexec/shgit_completions/${cmd//-/_}.sh
       ;;
-      #logcmpl) complete -o default -o nospace -F _git_log         $cmd ;;
     esac
   done
 done
