@@ -53,9 +53,9 @@ set +o monitor
 shopt -s lastpipe
 
 _shgit_init_msg "Reading shgit specific settings..."
-_shgit_trunc_symbol="$(git config --default "…" shgit.trunc-symbol)"
-_shgit_pwd_max_len="$(git config --default 20 shgit.pwd-max-len)"
-_sghit_prompt_mode="$(git config --default "override" shgit.prompt-command-mode)"
+_shgit_trunc_symbol="$(git config shgit.trunc-symbol 2> /dev/null || echo "…")"
+_shgit_pwd_max_len="$(git config shgit.pwd-max-len 2> /dev/null || echo 20)"
+_sghit_prompt_mode="$(git config shgit.prompt-command-mode 2> /dev/null || echo override)"
 
 
 _shgit_init_msg "Clearing out existing completions..."
@@ -201,7 +201,7 @@ case $_sghit_prompt_mode in
     PROMPT_COMMAND=shgit_prompt_cmd
   ;;
   stealthy)
-    _sghit_ps1_prefix="$(git config --default "✣" shgit.ps1-prefix)"
+    _sghit_ps1_prefix="$(git config shgit.ps1-prefix 2> /dev/null || echo "🐚 ")"
     if [[ -n "${PROMPT_COMMAND}" ]]; then
       _shgit_init_msg "Adjusting your PROMPT_COMMAND for this shell."
       PROMPT_COMMAND="${PROMPT_COMMAND}; PS1=\"${_sghit_ps1_prefix}\${PS1}\""
@@ -225,7 +225,7 @@ case $_sghit_prompt_mode in
   ;;
 esac
 
-if [[ "$(git config --default false "shgit.hook-cd")" = "true" ]]; then
+if [[ "$(git config "shgit.hook-cd")" = "true" ]]; then
   _shgit_init_msg "Hooking cd..."
   function cd {
     if [[ "${#:0}" -gt 0 ]]; then
