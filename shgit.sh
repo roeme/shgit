@@ -2,6 +2,7 @@
 # be quiet if the user requested so.
 _shgit_quiet_init="$(git config shgit.quiet-init)"
 _shgit_suppress_keyword_alert="$(git config shgit.suppress-keyword-message)"
+_shgit_verbose_exec_setting="$(git config shgit.verbose-exec)"
 
 function _shgit_init_msg() {
   [[ "${_shgit_quiet_init:-,,}" = true ]] || _shgit_msg "$1"
@@ -104,12 +105,24 @@ _git_cmd_cfg=(
   'tag            alias'
   'lfs            alias'
 )
+# declare verbose exec function if enabled
+if [[ "${_shgit_verbose_exec_setting:false}" = true ]]; then
+  function _shgit_verbose_alias() {
+    echo -n "> " 1>&2
+    printf "%q " "$@" 1>&2
+    echo -ne "\n" 1>&2
+    "$@"
+  }
+  alias_cmd_prefix='_shgit_verbose_alias '
+else
+  alias_cmd_prefix=''
+fi
 # load all aliases
 for cfg in "${_git_cmd_cfg[@]}" ; do
   read cmd opts <<< $cfg
   for opt in $opts ; do
     case $opt in
-      alias)   alias $cmd="git $cmd" ;;
+      alias)   alias $cmd="${alias_cmd_prefix}git $cmd" ;;
       stdcmpl)
         complete -o default -o nospace -F _gitcmpl_${cmd//-/_} $cmd
         source ~/.libexec/shgit_completions/${cmd//-/_}.sh
@@ -129,6 +142,7 @@ done
 _shgit_init_msg "Done setting up shell aliases."
 _shgit_init_msg "Loading your pre-defined git aliases"
 shell_keywords=( $(compgen -k) )
+
 eval "$(
     git config --get-regexp 'alias\..*' |
     sed 's/^alias\.//'                  |
@@ -142,7 +156,7 @@ eval "$(
       fi
       if expr -- "$command" : '!' >/dev/null
       then echo "alias $key='git $key'"
-      else echo "alias $key=\"git $command\""
+      else echo "alias $key=\"${alias_cmd_prefix} git $command\""
       fi
     done
   )"

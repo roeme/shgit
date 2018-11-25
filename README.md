@@ -83,6 +83,12 @@ fitting standard section. The following options are available in `[shgit]`:
     Tells shgit to hook cd, so instead of cwd to $HOME by default, this will
     move to the current repo's root.
 
+* `verbose-exec` (Boolean, Default false)
+
+    Tells shgit to echo what git commands will be executed. This also expands
+    your own git aliases to a certain degree. This is useful for
+    teaching&learning git.
+
 
 ## Colors
 Colors can be configured through git, by using the standard `[color]` section.
