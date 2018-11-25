@@ -109,7 +109,7 @@ _git_cmd_cfg=(
 if [[ "${_shgit_verbose_exec_setting:false}" = true ]]; then
   function _shgit_verbose_alias() {
     echo -n "> " 1>&2
-    printf "%q " "$@" 1>&2
+    printf "%q " "$*" 1>&2
     echo -ne "\n" 1>&2
     "$@"
   }
