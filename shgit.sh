@@ -4,7 +4,7 @@ _shgit_quiet_init="$(git config shgit.quiet-init)"
 _shgit_suppress_keyword_alert="$(git config shgit.suppress-keyword-message)"
 
 function _shgit_init_msg() {
-  [[ "${_shgit_quiet_init:-,,}" = true ]] || _shgit_msg $1
+  [[ "${_shgit_quiet_init:-,,}" = true ]] || _shgit_msg "$1"
 }
 
 function _shgit_msg() {
