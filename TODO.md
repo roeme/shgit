@@ -1,0 +1,2 @@
+* make it possible to have the user define shell keywords (but only as far as it makes sense.)
+* make it possible to have silent initialization (configurable)
