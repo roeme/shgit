@@ -192,6 +192,10 @@ function shgit_prompt_cmd {
   PS1="${shg_colors[reponame]}${repo_name} ${shg_colors[currentbranch]}${branch} ${shg_colors[pwd]}${newPWD} ${shg_colors[prompt]}\$${ANSI_RESET} "
 }
 
+function shgit_stealthy_prompt_cmd {
+  PS1="${_sghit_ps1_prefix}${PS1}"
+}
+
 case $_sghit_prompt_mode in
   override)
     [[ -z "${PROMPT_COMMAND}" ]] || {
@@ -204,9 +208,9 @@ case $_sghit_prompt_mode in
     _sghit_ps1_prefix="$(git config --default "✣" shgit.ps1-prefix)"
     if [[ -n "${PROMPT_COMMAND}" ]]; then
       _shgit_init_msg "Adjusting your PROMPT_COMMAND for this shell."
-      PROMPT_COMMAND="${PROMPT_COMMAND}; PS1=\"${_sghit_ps1_prefix}\${PS1}\""
+      PROMPT_COMMAND=$"${PROMPT_COMMAND};shgit_stealthy_prompt_cmd"
     else
-      PS1="${_sghit_ps1_prefix}${PS1}"
+      shgit_stealthy_prompt_cmd
     fi
   ;;
   no-touchy)
