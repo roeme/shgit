@@ -8,6 +8,13 @@
   }
 
 echo "shgit starting up."
+function in_array() {
+  local -n arr=$1
+  for item in "${arr[@]}"; do
+    [[ "${item}" = "${2}" ]] && return 0
+  done
+  return 1
+}
 
 # read user bashrc
 [[ -r ~/.bashrc ]] && {
@@ -97,11 +104,17 @@ for cmd_alias_entry in "${_sh_cmd_aliases[@]}"; do
 done
 echo "Done setting up shell aliases." >&2
 echo "Loading your pre-defined git aliases" >&2
+shell_keywords=( $(compgen -k) )
 eval "$(
     git config --get-regexp 'alias\..*' |
     sed 's/^alias\.//'                  |
     while read key command
     do
+      if in_array shell_keywords $key; then
+        echo "Warning: Your git alias '$key' is a shell keyword. This usually results in much funkiness, and hence is available as 'git $key'." >&2
+        # By simply skipping here, we offload the alias interpretation to git.
+        continue
+      fi
       if expr -- "$command" : '!' >/dev/null
       then echo "alias $key='git $key'"
       else echo "alias $key=\"git $command\""
