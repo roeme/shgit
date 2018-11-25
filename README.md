@@ -23,11 +23,16 @@ Configuration:
 shgit is configured through git, and uses the section `[shgit]` if there's no
 fitting standard section. The following options are available in `[shgit]`:
 
-* `quiet_init` (True/False):
+* `quiet_init` (True/False, Default false):
   Don't print initialization messages.
-* `suppress_keyword_alert` (True/False):
+* `suppress_keyword_alert` (True/False, Default false):
   If your aliases include a shell keyword, shgit will warn upon this and won't
   make the alias available at top-level. This setting will suppress the message.
+* `pwd-max-len` (Int, Default 20):
+  Maximum length of working directory to display in prompt (longer will be
+  truncated).
+* `trunc-symbol` (String, Default "…")
+  Truncation character to be used for working directory display.
 
 ## Colors
 Colors can be configured through git, by using the standard `[color]` section.

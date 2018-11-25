@@ -46,6 +46,10 @@ set +m
 set +o monitor
 shopt -s lastpipe
 
+_shgit_init_msg "Reading shgit specific settings..."
+_shgit_trunc_symbol="$(git config --default "…" shgit.trunc-symbol)"
+_shgit_pwd_max_len="$(git config shgit.pwd-max-len)"
+
 _shgit_init_msg "Clearing out existing completions..."
 complete -r
 
@@ -162,8 +166,8 @@ function prompt_info {
 }
 
 function prompt_pwd {
-  local pwdmaxlen=20
-  local trunc_symbol="…"
+  local pwdmaxlen="${_shgit_pwd_max_len:20}"
+  local trunc_symbol="${_shgit_trunc_symbol}"
   oldPWD="${PWD:${#current_worktree}}"
   if [ ${#oldPWD} -eq 0 ]; then
    newPWD=/
