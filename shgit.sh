@@ -104,7 +104,7 @@ eval "$(
     do
       if expr -- "$command" : '!' >/dev/null
       then echo "alias $key='git $key'"
-      else echo "gitalias $key=\"git $command\""
+      else echo "git alias $key=\"git $command\""
       fi
     done
   )"
