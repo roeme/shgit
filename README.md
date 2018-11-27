@@ -89,6 +89,16 @@ fitting standard section. The following options are available in `[shgit]`:
     your own git aliases to a certain degree. This is useful for
     teaching&learning git.
 
+* `operation-mode` (Enum, Default "lightweight")
+
+    Changes fundamentally how shgit issues git-commands on it's own.
+
+    * `lightweight`
+        shgit will only determine the current `HEAD`'s name, the current
+    working tree top-level directory, tags and remote names before prompting the
+    user.
+
+    * ``
 
 ## Colors
 Colors can be configured through git, by using the standard `[color]` section.

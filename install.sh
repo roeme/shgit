@@ -13,6 +13,10 @@ myloc="$($readlink -f "$(dirname "$0")")" || {
 usage() {
   echo "Usage: install.sh install|uninstall"
 }
+
+_link_libex_d() {
+  ln -s "$myloc/${1}" "${HOME}/.libexec/shgit_${1}"
+}
 case ${1:-} in
   install)
     git config --global alias.sh "!'$myloc/shgit.sh'"
