@@ -61,6 +61,9 @@ _sghit_prompt_mode="$(git config shgit.prompt-command-mode 2> /dev/null || echo 
 
 _shgit_init_msg "Clearing out existing completions..."
 complete -r
+_shgit_init_msg "Resetting default completion options."
+shopt -s no_empty_cmd_completion
+complete -Ea
 
 _shgit_init_msg "Setting up git aliases... "
 
@@ -122,9 +125,10 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
   read cmd opts <<< $cfg
   for opt in $opts ; do
     case $opt in
-      alias)   alias $cmd="${alias_cmd_prefix}git $cmd" ;;
+      alias)
+        alias $cmd="${alias_cmd_prefix}git $cmd" ;;
       stdcmpl)
-        complete -o default -o nospace -F _gitcmpl_${cmd//-/_} $cmd
+        complete -o nospace -F _gitcmpl_${cmd//-/_} $cmd
         source ~/.libexec/shgit_completions/${cmd//-/_}.sh
       ;;
     esac
