@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # be quiet if the user requested so.
 _shgit_quiet_init="$(git config shgit.quiet-init)"
 _shgit_suppress_keyword_alert="$(git config shgit.suppress-keyword-message)"
