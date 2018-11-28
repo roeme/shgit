@@ -68,8 +68,6 @@ if [[ $BASH_VERSINFO -eq 5 ]]; then
   complete -aI
 fi
 
-# regular command completion still takes place when parts of an alias
-# are typed. bash project has been asked for clarification
 
 _shgit_init_msg "Setting up git aliases... "
 
