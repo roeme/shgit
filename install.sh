@@ -14,6 +14,8 @@ usage() {
   echo "Usage: install.sh install|uninstall"
 }
 
+dirs=(completions lib)
+
 _link_libex_d() {
   ln -s "$myloc/${1}" "${HOME}/.libexec/shgit_${1}"
 }
@@ -21,16 +23,22 @@ case ${1:-} in
   install)
     git config --global alias.sh "!'$myloc/shgit.sh'"
     echo "added alias 'sh' to your global git config."
+
     [[ -d "${HOME}/.libexec" ]] || {
       mkdir "${HOME}/.libexec"
       echo "created ${HOME}/.libexec"
     }
-    ln -s "$myloc/completions" "${HOME}/.libexec/shgit_completions"
+    for dir in dirs; do
+      ln -s "$myloc/$dir" "${HOME}/.libexec/shgit_$dir"
+    done
     echo "You can invoke the shell via 'git sh' from within a repo."
     ;;
+
   uninstall)
-    rm -r "${HOME}/.libexec/shgit_completions"
-    echo "Removed ${HOME}/.libexec/shgit_completions"
+    for dir in dirs; do
+      rm -r "${HOME}/.libexec/shgit_$dir"
+      echo "Removed ${HOME}/.libexec/shgit_$dir"
+    done
     git config --global --unset alias.sh
     echo "Removed alias 'sh' from your global git config"
     ;;
