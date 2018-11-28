@@ -61,6 +61,15 @@ _sghit_prompt_mode="$(git config shgit.prompt-command-mode 2> /dev/null || echo 
 
 _shgit_init_msg "Clearing out existing completions..."
 complete -r
+_shgit_init_msg "Resetting default completion options."
+complete -Ea # complete only aliases when encountering empty line
+if [[ $BASH_VERSINFO -eq 5 ]]; then
+  # nice, bash 5. further limit completion to aliases only
+  complete -aI
+fi
+
+# under bash 4, regular command completion still takes place when parts of an alias
+# are typed.
 
 _shgit_init_msg "Setting up git aliases... "
 
