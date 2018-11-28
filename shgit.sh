@@ -133,7 +133,7 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
     case $opt in
       alias)   alias $cmd="${alias_cmd_prefix}git $cmd" ;;
       stdcmpl)
-        complete -o default -o nospace -F _gitcmpl_${cmd//-/_} $cmd
+        complete -o nospace -F _gitcmpl_${cmd//-/_} $cmd
         source ~/.libexec/shgit_completions/${cmd//-/_}.sh
       ;;
     esac
