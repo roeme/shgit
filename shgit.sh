@@ -149,6 +149,7 @@ eval "$(
     done
   )"
 
+_shgit_setup_palette
 
 _shgit_init_msg "Setting up prompt hook..."
 # initial load
