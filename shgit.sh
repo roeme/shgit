@@ -3,48 +3,41 @@
 _shgit_quiet_init="$(git config shgit.quiet-init)"
 _shgit_suppress_keyword_alert="$(git config shgit.suppress-keyword-message)"
 _shgit_verbose_exec_setting="$(git config shgit.verbose-exec)"
+_shgit_location="$(git config shgit.location)"
 
-function _shgit_init_msg() {
-  [[ "${_shgit_quiet_init:-,,}" = true ]] || _shgit_msg "$1"
-}
-
-function _shgit_warn_msg() {
-  _shgit_msg "\e[33mWarning:\e[39m $1"
-}
-
-function _shgit_die() {
-  _shgit_msg "\e[31mFail:\e[39m $1"
+# Load functions and stuff.
+[[ -n "${_shgit_location:-}" ]] || {
+  echo "shgit.location has not been configured! Please configure or use install.sh"
   exit 1
-}
-
-function _shgit_msg() {
-  echo -e "$1" >&2
 }
 
 # either we are sourced or spawn new shell
 [ "$0" = '-bash' ] || [[ "$0" = */bash ]] || [ "$0" = 'bash' ] ||
   {
-    _shgit_init_msg "Not sourced, exec new shell."
+    [[ -n "${_shgit_quiet_init:-}" ]] ||
+      echo "Not sourced, exec new shell." 1>&2
     /usr/bin/env bash --rcfile <(echo "source $0") "$@"
     exit
   }
 
-_shgit_init_msg "shgit starting up."
-function in_array() {
-  local -n arr=$1
-  for item in "${arr[@]}"; do
-    [[ "${item}" = "${2}" ]] && return 0
-  done
-  return 1
-}
+[[ -n "${_shgit_quiet_init:-}" ]] ||
+  echo "shgit starting up." 1>&2
 
-# read user bashrc
-[[ -r ~/.bashrc ]] && {
-  _shgit_init_msg "Loading your ~/.bashrc"
-  pushd ~ > /dev/null
-  . .bashrc
-  popd > /dev/null
-}
+# Load functions'n'stuff from external files
+_shgit_libfiles=(${_shgit_location}/lib/*)
+_cel=$(tput el)
+i=0; c=${#_shgit_libfiles[@]} ; echo -en '\n'
+for libfile in "${_shgit_libfiles[@]}" ; do
+  [[ -n "${_shgit_quiet_init:-}" ]] || {
+    echo -en "${_cel}\r"
+    i=$((i+1))
+    printf "[ %${#c}d/${c} ] ${libfile##*/}" $i
+  }
+  source $libfile
+done
+unset -v i c ; echo -en "\r${_cel}"
+
+_shgit_read_userbashrc
 
 _shgit_init_msg "Disabling job control and enabling lastpipe option"
 #unfortunately this doesn't (yet?) take effect when issued before
@@ -53,21 +46,8 @@ set +m
 set +o monitor
 shopt -s lastpipe
 
-_shgit_init_msg "Reading shgit specific settings..."
-_shgit_trunc_symbol="$(git config shgit.trunc-symbol 2> /dev/null || echo "…")"
-_shgit_pwd_max_len="$(git config shgit.pwd-max-len 2> /dev/null || echo 20)"
-_sghit_prompt_mode="$(git config shgit.prompt-command-mode 2> /dev/null || echo override)"
-
-
-_shgit_init_msg "Clearing out existing completions..."
-complete -r
-_shgit_init_msg "Resetting default completion options."
-complete -Ea # complete only aliases when encountering empty line
-if [[ $BASH_VERSINFO -eq 5 ]]; then
-  # nice, bash 5. further limit completion to aliases only
-  complete -aI
-fi
-
+_shgit_load_settings
+_shgit_completions_setup
 
 _shgit_init_msg "Setting up git aliases... "
 

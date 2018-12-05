@@ -12,35 +12,28 @@ myloc="$($readlink -f "$(dirname "$0")")" || {
 }
 usage() {
   echo "Usage: install.sh install|uninstall"
+  echo "Adjusts your global git config so you can use shgit"
 }
 
-dirs=(completions lib)
-
-_link_libex_d() {
-  ln -s "$myloc/${1}" "${HOME}/.libexec/shgit_${1}"
-}
 case ${1:-} in
   install)
     git config --global alias.sh "!'$myloc/shgit.sh'"
     echo "added alias 'sh' to your global git config."
 
-    [[ -d "${HOME}/.libexec" ]] || {
-      mkdir "${HOME}/.libexec"
-      echo "created ${HOME}/.libexec"
-    }
-    for dir in dirs; do
-      ln -s "$myloc/$dir" "${HOME}/.libexec/shgit_$dir"
-    done
+    git config --global shgit.location "$myloc"
+    echo "configured shgit location in global config as '${myloc}'"
+
     echo "You can invoke the shell via 'git sh' from within a repo."
     ;;
 
   uninstall)
-    for dir in dirs; do
-      rm -r "${HOME}/.libexec/shgit_$dir"
-      echo "Removed ${HOME}/.libexec/shgit_$dir"
-    done
+
     git config --global --unset alias.sh
-    echo "Removed alias 'sh' from your global git config"
+    echo "Removed alias 'sh' from your global git config."
+
+    git config --global shgit.location "$myloc"
+    echo "Removed 'shgit.location' from your global git config."
+
     ;;
   *|-h)
     usage
