@@ -80,8 +80,8 @@ fitting standard section. The following options are available in `[shgit]`:
 
 * `hook-cd` (Boolean, Default false)
 
-    Tells shgit to hook cd, so instead of cwd to $HOME by default, this will
-    move to the current repo's root.
+    Tells shgit to hook cd, so instead of cwd to $HOME by default when called
+    with no args, cwd to the current repo's root instead.
 
 * `verbose-exec` (Boolean, Default false)
 
