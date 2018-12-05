@@ -8,7 +8,7 @@ function _shgit_setup_palette() {
     'prompt          254 0'
     )
   ANSI_RESET="\001$(git config --get-color "" "reset")\002"
-  declare -A shg_colors
+  declare -Ag shg_colors
   _shgit_init_msg "Reading color escapes from git..."
   for defaultcol_entry in "${_get_colors_default[@]}"; do
     read colsetting default_color <<< $defaultcol_entry
