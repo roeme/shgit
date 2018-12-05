@@ -113,7 +113,7 @@ for cfg in "${_git_cmd_cfg[@]}" ; do
         alias $cmd="${alias_cmd_prefix}git $cmd" ;;
       stdcmpl)
         complete -o nospace -F _gitcmpl_${cmd//-/_} $cmd
-        source ~/.libexec/shgit_completions/${cmd//-/_}.sh
+        source ${_shgit_location}/completions/${cmd//-/_}.sh
       ;;
     esac
   done
