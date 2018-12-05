@@ -1,5 +1,5 @@
+#!/bin/bash
 # completion stuff
-
 function _shgit_completions_setup() {
   _shgit_init_msg "Clearing out existing completions..."
   complete -r

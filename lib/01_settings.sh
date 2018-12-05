@@ -1,3 +1,4 @@
+#!/bin/bash
 function _shgit_load_settings() {
   _shgit_init_msg "Reading shgit specific settings..."
   _shgit_trunc_symbol="$(git config shgit.trunc-symbol 2> /dev/null || echo "…")"

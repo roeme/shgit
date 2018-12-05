@@ -1,3 +1,4 @@
+#!/bin/bash
 function in_array() {
   local -n arr=$1
   for item in "${arr[@]}"; do
@@ -23,6 +24,7 @@ function _shgit_die() {
 function _shgit_read_userbashrc {
   [[ -r ~/.bashrc ]] && {
     _shgit_init_msg "Loading your ~/.bashrc"
+    # the pushd/popd is done on purpose. user's bashrc might rely on it...
     pushd ~ > /dev/null
     . .bashrc
     popd > /dev/null
