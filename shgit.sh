@@ -54,6 +54,7 @@ _shgit_init_msg "Setting up git aliases... "
 # define aliases. TODO: factor this outta here/make it configurable
 _git_cmd_cfg=(
   'add            alias'
+  'bisect         alias'
   'blame          alias'
   'branch         alias'
   'checkout       alias'
@@ -79,6 +80,7 @@ _git_cmd_cfg=(
   'pull           alias'
   'push           alias'
   'rebase         alias'
+  'reflog         alias'
   'remote         alias stdcmpl'
   'reset          alias'
   'rev-list       alias'
