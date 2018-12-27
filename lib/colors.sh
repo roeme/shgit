@@ -1,4 +1,6 @@
 #!/bin/bash
+# The $shg_colors variable is a named array which holds color codes for
+# various things. if possible, these use git standard colors.
 function _shgit_setup_palette() {
   _shgit_init_msg "Setting up color palette..."
   _get_colors_default=(
