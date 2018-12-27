@@ -9,7 +9,7 @@ function _shgit_setup_shell_aliases() {
 
   # Stock aliases. Can be overwritten
   declare -A _sh_cmd_aliases=(
-    pushall='remote|xargs -L1 git pushXX'
+    [pushall]='remote|xargs -L1 git push'
   )
 
   _shgit_init_msg "Loading your shgit shellcommands..."
@@ -26,7 +26,7 @@ function _shgit_setup_shell_aliases() {
       done
   _shgit_init_msg "Done loading your shellcommands, setting up aliases"
   for i in "${!_sh_cmd_aliases[@]}"; do
-    alias $i="${_sh_cmd_aliases[$i]}"
+    [[ -n "${_sh_cmd_aliases[$i]:-}" ]] && alias $i="${_sh_cmd_aliases[$i]}"
   done
   _shgit_init_msg "Done setting up shell aliases."
 }
