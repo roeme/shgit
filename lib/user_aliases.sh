@@ -6,7 +6,7 @@
 # clash with shell keywords. If there are conflicts, warn the user and prefix
 # the command.
 #
-function _shgit_load_user_aliases() {
+function _shgit_setup_user_aliases() {
   _shgit_init_msg "Loading your pre-defined git aliases"
   shell_keywords=( $(compgen -k) )
 
@@ -27,4 +27,5 @@ function _shgit_load_user_aliases() {
         fi
       done
     )"
+  _shgit_init_msg "Done setting up your pre-defined git aliases"
 }
