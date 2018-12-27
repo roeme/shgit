@@ -5,7 +5,6 @@ _shgit_suppress_keyword_alert="$(git config shgit.suppress-keyword-message)"
 _shgit_verbose_exec_setting="$(git config shgit.verbose-exec)"
 _shgit_location="$(git config shgit.location)"
 
-# Load functions and stuff.
 [[ -n "${_shgit_location:-}" ]] || {
   echo "shgit.location has not been configured! Please configure or use install.sh"
   exit 1
@@ -22,7 +21,6 @@ _shgit_location="$(git config shgit.location)"
 
 [[ -n "${_shgit_quiet_init:-}" ]] ||
   echo "shgit starting up." 1>&2
-
 # Load functions'n'stuff from external files
 _shgit_libfiles=(${_shgit_location}/lib/*)
 _cel=$(tput el)

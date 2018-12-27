@@ -10,6 +10,9 @@ myloc="$($readlink -f "$(dirname "$0")")" || {
   echo 'need GNU coreutils!'
   exit 1
 }
+# TODO: be friendly to people who use repo'ed dotfiles across multiple machines
+# with differing user names and/or homedir paths
+# this requires adjusting $myloc. hmm.
 usage() {
   echo "Usage: install.sh install|uninstall"
   echo "Adjusts your global git config so you can use shgit"
@@ -28,10 +31,10 @@ case ${1:-} in
 
   uninstall)
 
-    git config --global --unset alias.sh
+    git config --global --unset alias.sh || true
     echo "Removed alias 'sh' from your global git config."
 
-    git config --global shgit.location "$myloc"
+    git config --global --unset shgit.location || true
     echo "Removed 'shgit.location' from your global git config."
 
     ;;
