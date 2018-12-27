@@ -11,6 +11,7 @@ Unintrusive, lightweight git shell. Design/implementation considerations:
   (for stupid enterprise environments/slow homes/low resources)
 - Works with vanilla bash
 - Doesn't clobber your personal aliases/setups (or at least tries to)
+- Intended to operate within one repo (one instance per repo)
 
 Installation:
 -------------
@@ -26,8 +27,8 @@ fitting standard section. The available options are documented at
 [doc/options.md](doc/options.md).
 
 ### Commands
-As aliases are a - if not the - central functionality of shgit, adjustment of
-these is documented at [doc/commands.md](doc/commands.md).
+As commands/aliases are a - if not the - central functionality of shgit,
+adjustment of these is documented at [doc/commands.md](doc/commands.md).
 
 ### Colors
 Colors can be configured through git, by using the standard `[color]` section.
