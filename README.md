@@ -23,8 +23,11 @@ Customization:
 --------------
 ### General config
 shgit is configured through git, and uses the section `[shgit]` if there's no
-fitting standard section. The available options are documented at
-[doc/options.md](doc/options.md).
+fitting standard section. This has the advantage of being able to configure
+shgit differently per repository, and through your preferred way to configure
+git (through `git config`, `.gitconfig`, `.git/config`, etc. pp. ).
+
+The available options are documented at [doc/options.md](doc/options.md).
 
 ### Commands
 As commands/aliases are a - if not the - central functionality of shgit,
