@@ -6,3 +6,4 @@ shgit Changelog
  - Moved Documentation into a separate folder
  - Decluttered main shell script, moved stuff into lib/.
  - Made shell commands completely configurable through git
+ - Made git commands completely configurable through git
