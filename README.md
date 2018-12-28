@@ -13,6 +13,10 @@ Unintrusive, lightweight git shell. Design/implementation considerations:
 - Doesn't clobber your personal aliases/setups (or at least tries to)
 - Intended to operate within one repo (one instance per repo)
 
+Note: this is very much "beta", a lot of this is subject to change.
+A lot of the internals, and code design haven't yet been hashed out
+conclusively.
+
 Installation:
 -------------
 1. git clone git@github.com:roeme/shgit.git
