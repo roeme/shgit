@@ -1,49 +1,49 @@
 #!/bin/bash
 function _shgit_setup_git_aliases() {
   _shgit_init_msg "Setting up git aliases... "
-
-  # define aliases. TODO: factor this outta here/make it configurable
-  _git_cmd_cfg=(
-    'add            alias'
-    'bisect         alias'
-    'blame          alias'
-    'branch         alias'
-    'checkout       alias'
-    'cherry         alias'
-    'cherry-pick    alias'
-    'clean          alias'
-    'clone          alias'
-    'commit         alias'
-    'config         alias'
-    'diff           alias'
-    'fetch          alias'
-    'fsck           alias'
-    'gc             alias'
-    'grep           alias'
-    'init           alias'
-    'log            alias'
-    'ls-remote      alias'
-    'ls-tree        alias'
-    'merge          alias stdcmpl'
-    'merge-base     alias'
-    'mergetool      alias'
-    'mv             alias'
-    'pull           alias'
-    'push           alias'
-    'rebase         alias'
-    'reflog         alias'
-    'remote         alias stdcmpl'
-    'reset          alias'
-    'rev-list       alias'
-    'rev-parse      alias'
-    'revert         alias'
-    'rm             alias'
-    'shortlog       alias'
-    'show           alias'
-    'stash          alias'
-    'status         alias'
-    'tag            alias'
-    'lfs            alias'
+  shopt -s lastpipe
+  # Stock aliases. Can be overwritten.
+  declare -A _git_cmd_cfg=(
+    [add]='alias'
+    [bisect]='alias'
+    [blame]='alias'
+    [branch]='alias'
+    [checkout]='alias'
+    [cherry]='alias'
+    [cherry-pick]='alias'
+    [clean]='alias'
+    [clone]='alias'
+    [commit]='alias'
+    [config]='alias'
+    [diff]='alias'
+    [fetch]='alias'
+    [fsck]='alias'
+    [gc]='alias'
+    [grep]='alias'
+    [init]='alias'
+    [log]='alias'
+    [ls-remote]='alias'
+    [ls-tree]='alias'
+    [merge]='alias stdcmpl'
+    [merge-base]='alias'
+    [mergetool]='alias'
+    [mv]='alias'
+    [pull]='alias'
+    [push]='alias'
+    [rebase]='alias'
+    [reflog]='alias'
+    [remote]='alias stdcmpl'
+    [reset]='alias'
+    [rev-list]='alias'
+    [rev-parse]='alias'
+    [revert]='alias'
+    [rm]='alias'
+    [shortlog]='alias'
+    [show]='alias'
+    [stash]='alias'
+    [status]='alias'
+    [tag]='alias'
+    [lfs]='alias'
   )
   # declare verbose exec function if enabled
   if [[ "${_shgit_verbose_exec_setting:false}" = true ]]; then
@@ -57,12 +57,21 @@ function _shgit_setup_git_aliases() {
   else
     alias_cmd_prefix=''
   fi
+
+  _shgit_init_msg "Loading your shgit git commands..."
+  git config --get-regexp 'shgit.commands\..*' |
+      sed 's/^shgit.commands\.//'              |
+      while read -r key cfg; do
+         _git_cmd_cfg[$key]="${cfg}"
+      done
+  _shgit_init_msg "Done loading your shgit git commands, setting up aliases"
+
   # load all aliases
-  for cfg in "${_git_cmd_cfg[@]}" ; do
-    read cmd opts <<< $cfg
-    for opt in $opts ; do
-      case $opt in
+  for cmd in "${!_git_cmd_cfg[@]}"; do
+    for opt in ${_git_cmd_cfg[$cmd]}; do
+      case "$opt" in
         alias)
+          # shellcheck disable=SC2139,SC2086
           alias $cmd="${alias_cmd_prefix}git $cmd" ;;
         stdcmpl)
           complete -o nospace -F _gitcmpl_${cmd//-/_} $cmd
@@ -71,5 +80,6 @@ function _shgit_setup_git_aliases() {
       esac
     done
   done
-  _shgit_init_msg "Setting up stock aliases done"
+
+  _shgit_init_msg "Setting up git commands done"
 }

@@ -5,6 +5,7 @@
 #
 function _shgit_setup_shell_aliases() {
   _shgit_init_msg "Setting up shell aliases..."
+  shopt -s lastpipe
   shell_keywords=( $(compgen -k) )
 
   # Stock aliases. Can be overwritten
@@ -15,8 +16,8 @@ function _shgit_setup_shell_aliases() {
   _shgit_init_msg "Loading your shgit shellcommands..."
   git config --get-regexp 'shgit.shellcommands\..*' |
       sed 's/^shgit.shellcommands\.//'              |
-      while read key command; do
-        if in_array shell_keywords $key; then
+      while read -r key command; do
+        if in_array shell_keywords "$key"; then
           [[ "${_shgit_suppress_keyword_alert:-,,}" = true ]] ||
             _shgit_warn_msg "Your shell alias '$key' is a shell keyword. This usually results in much funkiness, and hence is available as 'shgit $key'."
           _sh_cmd_aliases[$key]="shgit ${command}"
@@ -26,6 +27,7 @@ function _shgit_setup_shell_aliases() {
       done
   _shgit_init_msg "Done loading your shellcommands, setting up aliases"
   for i in "${!_sh_cmd_aliases[@]}"; do
+    # shellcheck disable=SC2139,SC2086
     [[ -n "${_sh_cmd_aliases[$i]:-}" ]] && alias $i="${_sh_cmd_aliases[$i]}"
   done
   _shgit_init_msg "Done setting up shell aliases."
