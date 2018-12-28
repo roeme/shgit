@@ -18,7 +18,7 @@ The following options are available in `[shgit]`:
 
 * `trunc-symbol` (String, Default "…"):
 
-    Truncation character to be used for working directory display.
+    Truncation character to be used for working directory display when 'prompt-command-mode' is set to "override".
 
 * `prompt-command-mode` (Enum, Default "override"):
 
