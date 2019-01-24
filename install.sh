@@ -38,7 +38,7 @@ case ${1:-} in
     echo "Removed 'shgit.location' from your global git config."
 
     ;;
-  *|-h)
+  -h|*)
     usage
     ;;
 esac
