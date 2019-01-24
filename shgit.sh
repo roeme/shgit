@@ -32,7 +32,7 @@ for libfile in "${_shgit_libfiles[@]}" ; do
   # shellcheck disable=SC1090
   source "$libfile"
 done
-unset -v i c ; echo -en "\r${_cel}"
+unset -v i c ; echo -en "\\r${_cel}"
 
 _shgit_read_userbashrc
 
