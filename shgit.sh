@@ -25,7 +25,7 @@ _cel=$(tput el)
 i=0; c=${#_shgit_libfiles[@]} ; echo -en '\n'
 for libfile in "${_shgit_libfiles[@]}" ; do
   [[ -n "${_shgit_quiet_init:-}" ]] || {
-    echo -en "${_cel}\r"
+    echo -en "${_cel}\\r"
     i=$((i+1))
     printf "[ %${#c}d/${c} ] ${libfile##*/}" $i
   }
