@@ -13,7 +13,7 @@ function _shgit_setup_palette() {
   declare -Ag shg_colors
   _shgit_init_msg "Reading color escapes from git..."
   for defaultcol_entry in "${_get_colors_default[@]}"; do
-    read colsetting default_color <<< $defaultcol_entry
+    read -r colsetting default_color <<< $defaultcol_entry
     shg_colors[${colsetting}]="\001$(git config --get-color color.shgit.${colsetting} "${default_color}")\002"
   done
   unset _get_colors_default
