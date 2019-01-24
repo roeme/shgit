@@ -4,6 +4,7 @@ Consider this a scratchpad for now. Subject to change.
 * add repo state indicators (dirty/diffs/etc)
 * make it easier to switch repos (and hence, reload per-repo settings)
 * use isolated history file
+* check for bash version
 
 done (reference only)
 ---------------------
