@@ -1,0 +1,6 @@
+shellcheck:
+  script:
+    - shellcheck *.sh
+    - shellcheck lib/*.sh
+    - shellcheck completions/*.sh
+  
