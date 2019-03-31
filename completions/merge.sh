@@ -1,3 +1,4 @@
+#shellcheck shell=bash
 _gitcmpl_merge() {
   local cur prev opts
   COMPREPLY=()
