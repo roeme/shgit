@@ -7,5 +7,7 @@ _gitcmpl_merge() {
   opts="--abort --continue --ff -e"
   if [[ ${cur} == -* ]] ; then
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  else
+    COMPREPLY=( $(compgen -W "${_shgit_branches[*]}" -- ${cur}) )
   fi
 }
