@@ -57,6 +57,7 @@ _shgit_init_msg "Setting up prompt hook..."
 
 # initial load of repo data
 _shgit_load_branches
+_shgit_load_remotes
 current_worktree=$(git rev-parse --show-toplevel)
 repo_name=$(basename "${current_worktree}")
 
