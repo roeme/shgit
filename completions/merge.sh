@@ -8,6 +8,6 @@ _gitcmpl_merge() {
   if [[ ${cur} == -* ]] ; then
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
   else
-    COMPREPLY=( $(compgen -W "${_shgit_branches[*]}" -- ${cur}) )
+    COMPREPLY=( $(compgen -W "${_shgit_branches[*]##*/}" -- ${cur}) )
   fi
 }
