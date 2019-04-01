@@ -29,7 +29,7 @@ function _shgit_setup_git_aliases() {
     [mergetool]='alias'
     [mv]='alias'
     [pull]='alias'
-    [push]='alias'
+    [push]='alias stdcmpl'
     [rebase]='alias'
     [reflog]='alias'
     [remote]='alias stdcmpl'

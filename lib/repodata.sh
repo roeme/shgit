@@ -7,5 +7,5 @@ function _shgit_load_branches() {
 
 declare -a _shgit_remotes
 function _shgit_load_remotes() {
-  git remote -v | mapfile -t _shgit_remotes
+  git remote | mapfile -t _shgit_remotes
 }
