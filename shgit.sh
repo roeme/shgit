@@ -52,6 +52,7 @@ _shgit_setup_git_aliases
 _shgit_setup_shell_aliases
 _shgit_setup_user_aliases
 _shgit_setup_palette
+_shgit_adjust_history
 
 _shgit_init_msg "Setting up prompt hook..."
 
