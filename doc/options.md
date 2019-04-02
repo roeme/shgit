@@ -67,3 +67,8 @@ The following options are available in `[shgit]`:
     Tells shgit to echo what git commands will be executed. This also expands
     your own git aliases to a certain degree. This is useful for
     teaching&learning git.
+
+* `separate-histfile` (Boolean, Default true)
+
+    Keep shgit history separate from regular bash history. This will modify
+    the `$HISTFILE` variable by appending a '.shgit' suffix.

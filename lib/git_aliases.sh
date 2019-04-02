@@ -8,7 +8,7 @@ function _shgit_setup_git_aliases() {
     [bisect]='alias'
     [blame]='alias'
     [branch]='alias'
-    [checkout]='alias'
+    [checkout]='alias stdcmpl'
     [cherry]='alias'
     [cherry-pick]='alias'
     [clean]='alias'
