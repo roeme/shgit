@@ -1,3 +1,4 @@
+#shellcheck shell=bash
 _gitcmpl_remote() {
   local cur prev subcmds
   COMPREPLY=()
