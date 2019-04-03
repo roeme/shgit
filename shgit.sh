@@ -66,9 +66,10 @@ repo_name=$(basename "${current_worktree}")
 function prompt_info {
   set +o monitor # currently needed here :/
   git rev-parse --show-toplevel --abbrev-ref HEAD | read -rd '\n' current_worktree branch #|| { current_worktree='' ; repo_name='💤' ; }
-  _shgit_load_branches # for now, simply reload branches for every command.
+  case "${_sghit_lastcmd}" in
+    *checkout*) _shgit_load_branches ;; # branches might have changed
+  esac
 }
-
 # TODO temporary:
 # shellcheck disable=SC2154
 function prompt_pwd {
@@ -90,6 +91,8 @@ function shgit_prompt_cmd {
   prompt_info
   prompt_pwd
   PS1="${shg_colors[reponame]}${repo_name} ${shg_colors[currentbranch]}${branch} ${shg_colors[pwd]}${newPWD} ${shg_colors[prompt]}\$${ANSI_RESET} "
+  # rearm trap
+  trap '_sghit_lastcmd="$BASH_COMMAND";trap - DEBUG' DEBUG
 }
 
 function shgit_stealthy_prompt_cmd {
@@ -97,6 +100,7 @@ function shgit_stealthy_prompt_cmd {
 }
 # TODO temporary:
 # shellcheck disable=SC2154
+trap '_sghit_lastcmd="$BASH_COMMAND";trap - DEBUG' DEBUG
 case $_sghit_prompt_mode in
   override)
     [[ -z "${PROMPT_COMMAND}" ]] || {
