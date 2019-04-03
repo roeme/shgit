@@ -66,10 +66,9 @@ repo_name=$(basename "${current_worktree}")
 function prompt_info {
   set +o monitor # currently needed here :/
   git rev-parse --show-toplevel --abbrev-ref HEAD | read -rd '\n' current_worktree branch #|| { current_worktree='' ; repo_name='💤' ; }
-  case "${_sghit_lastcmd%% *}" in
-    checkout) _shgit_load_branches ;; # branches might have changed
-  esac
+  _shgit_load_branches # for now, simply reload branches for every command.
 }
+
 # TODO temporary:
 # shellcheck disable=SC2154
 function prompt_pwd {
@@ -88,7 +87,6 @@ function prompt_pwd {
 # TODO temporary:
 # shellcheck disable=SC2154
 function shgit_prompt_cmd {
-  _sghit_lastcmd="${_}"
   prompt_info
   prompt_pwd
   PS1="${shg_colors[reponame]}${repo_name} ${shg_colors[currentbranch]}${branch} ${shg_colors[pwd]}${newPWD} ${shg_colors[prompt]}\$${ANSI_RESET} "

@@ -1,7 +1,7 @@
 Consider this a scratchpad for now. Subject to change.
 
 * add repo state indicators (dirty/diffs/etc)
-* decide on a strategy on how and when to load repository metadate
+* decide on a strategy on how and when to load repository metadata
 * make it easier to switch repos (and hence, reload per-repo settings)
 * check for bash and/or git version, and document requirements
 
