@@ -2,7 +2,7 @@
 # be quiet if the user requested so.
 _shgit_quiet_init="$(git config shgit.quiet-init)"
 _shgit_location="$(git config shgit.location)"
-
+export _sghit_lastcmd=''
 [[ -n "${_shgit_location:-}" ]] || {
   echo "shgit.location has not been configured! Please configure or use install.sh"
   exit 1
@@ -20,20 +20,23 @@ _shgit_location="$(git config shgit.location)"
 [[ -n "${_shgit_quiet_init:-}" ]] ||
   echo "shgit starting up." 1>&2
 # Load functions'n'stuff from external files
-_shgit_libfiles=("${_shgit_location}/lib/"*)
-_cel=$(tput el)
-i=0; c=${#_shgit_libfiles[@]} ; echo -en '\n'
-for libfile in "${_shgit_libfiles[@]}" ; do
-  [[ -n "${_shgit_quiet_init:-}" ]] || {
-    echo -en "${_cel}\r"
-    i=$((i+1))
-    printf "[ %${#c}d/${c} ] ${libfile##*/}" $i
-  }
-  # shellcheck disable=SC1090
-  source "$libfile"
-done
-unset -v i c ; echo -en "\r${_cel}"
-
+function _sghit_load_libs() {
+  _shgit_libfiles=("${_shgit_location}/lib/"*)
+  _cel=$(tput el)
+  i=0; c=${#_shgit_libfiles[@]} ; echo -en '\n'
+  for libfile in "${_shgit_libfiles[@]}" ; do
+    [[ -n "${_shgit_quiet_init:-}" ]] || {
+      echo -en "${_cel}\\r"
+      i=$((i+1))
+      printf "[ %${#c}d/${c} ] ${libfile##*/}" $i
+    }
+    # shellcheck disable=SC1090
+    source "$libfile"
+  done
+  unset -v i c ; echo -en "\\r${_cel}"
+  _shgit_init_msg "lib load complete"
+}
+_sghit_load_libs ; alias reload-libs=_sghit_load_libs # dev
 _shgit_read_userbashrc
 
 _shgit_init_msg "Disabling job control and enabling lastpipe option"
@@ -49,9 +52,13 @@ _shgit_setup_git_aliases
 _shgit_setup_shell_aliases
 _shgit_setup_user_aliases
 _shgit_setup_palette
+_shgit_adjust_history
 
 _shgit_init_msg "Setting up prompt hook..."
-# initial load
+
+# initial load of repo data
+_shgit_load_branches
+_shgit_load_remotes
 current_worktree=$(git rev-parse --show-toplevel)
 repo_name=$(basename "${current_worktree}")
 
@@ -59,7 +66,9 @@ repo_name=$(basename "${current_worktree}")
 function prompt_info {
   set +o monitor # currently needed here :/
   git rev-parse --show-toplevel --abbrev-ref HEAD | read -rd '\n' current_worktree branch #|| { current_worktree='' ; repo_name='💤' ; }
+  _shgit_load_branches # for now, simply reload branches for every command.
 }
+
 # TODO temporary:
 # shellcheck disable=SC2154
 function prompt_pwd {

@@ -14,8 +14,19 @@ myloc="$($readlink -f "$(dirname "$0")")" || {
 # with differing user names and/or homedir paths
 # this requires adjusting $myloc. hmm.
 usage() {
-  echo "Usage: install.sh install|uninstall"
-  echo "Adjusts your global git config so you can use shgit"
+  cat <<EOF
+Usage: install.sh install|uninstall
+Adjusts your global git config so you can use shgit
+If you have customized git configuration setup, just add
+
+    [alias]
+      sh = !\"$myloc/shgit.sh\"
+    [shgit]
+      location = ${myloc}'
+
+as appropriate to your configuration.
+For more information, see README.md and doc/ dir.
+EOF
 }
 
 case ${1:-} in
@@ -38,7 +49,7 @@ case ${1:-} in
     echo "Removed 'shgit.location' from your global git config."
 
     ;;
-  *|-h)
+  -h|*)
     usage
     ;;
 esac
