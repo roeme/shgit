@@ -10,9 +10,6 @@ myloc="$($readlink -f "$(dirname "$0")")" || {
   echo 'need GNU coreutils!'
   exit 1
 }
-# TODO: be friendly to people who use repo'ed dotfiles across multiple machines
-# with differing user names and/or homedir paths
-# this requires adjusting $myloc. hmm.
 usage() {
   cat <<EOF
 Usage: install.sh install|uninstall

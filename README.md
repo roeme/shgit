@@ -11,7 +11,7 @@ Unintrusive, lightweight git shell. Design/implementation considerations:
   (for stupid enterprise environments/slow homes/low resources)
 - Works with vanilla bash
 - Doesn't clobber your personal aliases/setups (or at least tries to)
-- Intended to operate within one repo (one instance per repo)
+- Intended to be operated within one repo (one instance per repo)
 
 Note: this is very much "beta", a lot of this is subject to change.
 A lot of the internals, and code design haven't yet been hashed out
