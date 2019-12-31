@@ -79,8 +79,7 @@ function _shgit_setup_git_aliases() {
           eval $(
             git config --get-regexp "^alias[.]" |
               egrep "^alias[.][^ ]+ $cmd($| )" |
-              sed -r 's#^alias[.]([^ ]+) .*$#complete -F _gitcmpl_${cmd//-/_} \1#' |
-              tee /dev/stderr
+              sed -r 's#^alias[.]([^ ]+) .*$#complete -F _gitcmpl_${cmd//-/_} \1#'
           )
           source ${_shgit_location}/completions/${cmd//-/_}.sh
         ;;
