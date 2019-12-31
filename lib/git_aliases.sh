@@ -74,7 +74,14 @@ function _shgit_setup_git_aliases() {
           # shellcheck disable=SC2139,SC2086
           alias $cmd="${alias_cmd_prefix}git $cmd" ;;
         stdcmpl)
-          complete -o nospace -F _gitcmpl_${cmd//-/_} $cmd
+          complete -F _gitcmpl_${cmd//-/_} $cmd
+          # complete also for aliases that point to $cmd
+          eval $(
+            git config --get-regexp "^alias[.]" |
+              egrep "^alias[.][^ ]+ $cmd($| )" |
+              sed -r 's#^alias[.]([^ ]+) .*$#complete -F _gitcmpl_${cmd//-/_} \1#' |
+              tee /dev/stderr
+          )
           source ${_shgit_location}/completions/${cmd//-/_}.sh
         ;;
       esac
