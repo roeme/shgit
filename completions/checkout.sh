@@ -8,6 +8,7 @@ _gitcmpl_checkout() {
   if [[ ${cur} == -* ]] ; then
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
   else
+    _shgit_load_branches
     COMPREPLY=( $(compgen -o filenames -A file -W "${_shgit_branches[*]##*/}" -- ${cur}) )
   fi
 }
