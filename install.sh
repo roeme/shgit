@@ -14,7 +14,7 @@ usage() {
   cat <<EOF
 Usage: install.sh install|uninstall
 Adjusts your global git config so you can use shgit
-If you have customized git configuration setup, just add
+If you have a customized git configuration setup, just add
 
     [alias]
       sh = !\"$myloc/shgit.sh\"
