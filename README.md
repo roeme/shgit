@@ -19,8 +19,8 @@ conclusively.
 
 Installation:
 -------------
-1. git clone git@github.com:roeme/shgit.git
-2. cd shgit && ./install.sh install
+1. `git clone git@github.com:roeme/shgit.git`
+2. `cd shgit && ./install.sh install`
 
 
 Customization:
