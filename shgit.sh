@@ -98,9 +98,10 @@ function shgit_prompt_cmd {
 function shgit_stealthy_prompt_cmd {
   PS1="${_sghit_ps1_prefix}${PS1}"
 }
+
+trap '_sghit_lastcmd="$BASH_COMMAND";trap - DEBUG' DEBUG
 # TODO temporary:
 # shellcheck disable=SC2154
-trap '_sghit_lastcmd="$BASH_COMMAND";trap - DEBUG' DEBUG
 case $_sghit_prompt_mode in
   override)
     [[ -z "${PROMPT_COMMAND}" ]] || {
