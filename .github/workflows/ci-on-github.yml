@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: setup
         run: sudo apt-get install shellcheck
+      - name: checkout repo
+        uses: actions/checkout@v2
       - name: shellcheck
         run: |
           shellcheck *.sh
