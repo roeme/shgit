@@ -1,5 +1,9 @@
+name: shellcheck
 on:
   push:
+    branches:
+      - next
+  pull-request:
     branches:
       - next
 jobs:
