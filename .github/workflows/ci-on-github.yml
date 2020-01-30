@@ -1,21 +1,23 @@
-name: shellcheck
-on:
-  push:
-    branches:
-      - next
-  pull_request:
-    branches:
-      - next
-jobs:
-  shellcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: setup
-        run: sudo apt-get install shellcheck
-      - name: checkout repo
-        uses: actions/checkout@v2
-      - name: shellcheck
-        run: |
-          shellcheck *.sh
-          shellcheck lib/*.sh
-          shellcheck completions/*.sh
+# disabled for now, since via GH ubuntu runners
+# we only get shellcheck 0.4. need 0.7 though.
+#name: shellcheck
+#on:
+#  push:
+#    branches:
+#      - next
+#  pull_request:
+#    branches:
+#      - next
+#jobs:
+#  shellcheck:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: setup
+#        run: sudo apt-get install shellcheck
+#      - name: checkout repo
+#        uses: actions/checkout@v2
+#      - name: shellcheck
+#        run: |
+#          shellcheck *.sh
+#          shellcheck lib/*.sh
+#          shellcheck completions/*.sh
