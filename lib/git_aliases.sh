@@ -15,11 +15,9 @@ function _shgit_setup_git_aliases() {
     [clone]='alias'
     [commit]='alias'
     [config]='alias'
-    [diff]='alias'
     [fetch]='alias'
     [fsck]='alias'
     [gc]='alias'
-    [grep]='alias'
     [init]='alias'
     [log]='alias'
     [ls-remote]='alias'
@@ -27,7 +25,6 @@ function _shgit_setup_git_aliases() {
     [merge]='alias stdcmpl'
     [merge-base]='alias'
     [mergetool]='alias'
-    [mv]='alias'
     [pull]='alias'
     [push]='alias stdcmpl'
     [rebase]='alias'
@@ -37,7 +34,6 @@ function _shgit_setup_git_aliases() {
     [rev-list]='alias'
     [rev-parse]='alias'
     [revert]='alias'
-    [rm]='alias'
     [shortlog]='alias'
     [show]='alias'
     [stash]='alias'
@@ -74,7 +70,13 @@ function _shgit_setup_git_aliases() {
           # shellcheck disable=SC2139,SC2086
           alias $cmd="${alias_cmd_prefix}git $cmd" ;;
         stdcmpl)
-          complete -o nospace -F _gitcmpl_${cmd//-/_} $cmd
+          complete -F _gitcmpl_${cmd//-/_} $cmd
+          # complete also for aliases that point to $cmd
+          eval $(
+            git config --get-regexp "^alias[.]" |
+              egrep "^alias[.][^ ]+ $cmd($| )" |
+              sed -r 's#^alias[.]([^ ]+) .*$#complete -F _gitcmpl_${cmd//-/_} \1#'
+          )
           source ${_shgit_location}/completions/${cmd//-/_}.sh
         ;;
       esac
